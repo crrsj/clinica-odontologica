@@ -28,7 +28,7 @@ public class PacienteControle {
         var uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(cadastrar.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
-        //return ResponseEntity.created(uri).body(new CadastrarPacienteDto(cadastrar));
+       
     }
 
     @GetMapping
