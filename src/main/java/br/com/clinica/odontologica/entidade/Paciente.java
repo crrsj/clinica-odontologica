@@ -26,12 +26,14 @@ public class Paciente {
     private String alergias;
     private String medicamentos;
     @OneToMany(mappedBy = "paciente",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Consulta>consulta = new ArrayList<>();
-    @OneToMany(mappedBy = "paciente",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Financeiro>financeiro = new ArrayList<>();
+    private List<Consulta>consulta;
+    @OneToMany(mappedBy = "paciente")
+    private List<Financeiro>financeiro;
 
     public Paciente() {
     }
+
+
 
     public Long getId() {
         return id;

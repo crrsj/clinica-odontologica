@@ -1,8 +1,11 @@
 package br.com.clinica.odontologica.controle;
 
+import br.com.clinica.odontologica.dto.AtualizarPacienteDto;
+import br.com.clinica.odontologica.dto.BuscarPacientesDto;
 import br.com.clinica.odontologica.dto.CadastrarPacienteDto;
 import br.com.clinica.odontologica.entidade.Paciente;
 import br.com.clinica.odontologica.servico.PacienteServico;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
@@ -32,8 +35,37 @@ public class PacienteControle {
     }
 
     @GetMapping
-    public ResponseEntity<List<Paciente>>listarPacientes(){
+    public ResponseEntity<List<BuscarPacientesDto>>listarPacientes(){
         var listar = pacienteServico.listarPacientes();
         return ResponseEntity.ok().body(listar);
+    }
+
+
+    @GetMapping("/nomePaciente")
+    public ResponseEntity<List<BuscarPacientesDto>>buscarPorNome(@PathParam("nome")String nome){
+        var buscarNome = pacienteServico.buscarPorNome(nome);
+        return ResponseEntity.ok().body(buscarNome.stream().map(BuscarPacientesDto::new).toList());
+    }
+
+
+    @GetMapping("/cpfPaciente")
+    public ResponseEntity<?>buscarPorCpf(@PathParam("cpf")String cpf){
+        var buscarCpf = pacienteServico.buscarPorCpf(cpf);
+        return ResponseEntity.ok().body(buscarCpf);
+    }
+
+
+    @PostMapping("/{id}")
+    public ResponseEntity<AtualizarPacienteDto> atualizarPaciente(@RequestBody AtualizarPacienteDto atualizarPacienteDto,
+                                                                  @PathVariable Long id){
+        var atualizar = pacienteServico.AtualizarPaciente(atualizarPacienteDto,id);
+        BeanUtils.copyProperties(atualizarPacienteDto,atualizar);
+        return ResponseEntity.ok().body(atualizarPacienteDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void>excluirPaciente(@PathVariable Long id){
+        pacienteServico.excluirPaciente(id);
+        return ResponseEntity.noContent().build();
     }
 }

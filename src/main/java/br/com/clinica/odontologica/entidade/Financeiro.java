@@ -24,7 +24,9 @@ public class Financeiro {
     @Column(columnDefinition = "TEXT")
     private String descricao;
     private double valor;
+    @Enumerated(EnumType.STRING)
     private FormaPagamento formaPagamento;
+    @Enumerated(EnumType.STRING)
     private StatusPagamento status;
     @ManyToOne
     private Paciente paciente;

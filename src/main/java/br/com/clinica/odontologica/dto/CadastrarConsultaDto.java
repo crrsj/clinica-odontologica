@@ -1,43 +1,27 @@
-package br.com.clinica.odontologica.entidade;
+package br.com.clinica.odontologica.dto;
 
+import br.com.clinica.odontologica.entidade.Dentista;
+import br.com.clinica.odontologica.entidade.Paciente;
 import br.com.clinica.odontologica.enums.StatusConsulta;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Entity
-@Table(name = "tb_consultas")
-public class Consulta {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class CadastrarConsultaDto {
+
+
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
     private LocalDate dataConsulta;
     private LocalTime horaConsulta;
     private String procedimento;
-    @Enumerated(EnumType.STRING)
     private StatusConsulta status;
-    @ManyToOne
-    @JoinColumn(name = "paciente_id")
     private Paciente paciente;
-    @ManyToOne
-    @JoinColumn(name = "dentista_id")
     private Dentista dentista;
 
-    public Consulta() {
-    }
+    public CadastrarConsultaDto() {
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public LocalDate getDataConsulta() {

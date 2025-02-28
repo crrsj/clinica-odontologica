@@ -11,8 +11,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "tb_dentistas")
-@Data
-@NoArgsConstructor
 public class Dentista {
 
     @Id
@@ -24,6 +22,65 @@ public class Dentista {
     private String telefone;
     private String email;
     @OneToMany(mappedBy = "dentista")
-    private List<Consulta> consulta = new ArrayList<>();
+    private List<Consulta> consulta;
+
+    public Dentista() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCro() {
+        return cro;
+    }
+
+    public void setCro(String cro) {
+        this.cro = cro;
+    }
+
+    public String getEspecialidade() {
+        return especialidade;
+    }
+
+    public void setEspecialidade(String especialidade) {
+        this.especialidade = especialidade;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public List<Consulta> getConsulta() {
+        return consulta;
+    }
+
+    public void setConsulta(List<Consulta> consulta) {
+        this.consulta = consulta;
+    }
 }
 

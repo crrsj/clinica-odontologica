@@ -6,6 +6,7 @@ import br.com.clinica.odontologica.entidade.Paciente;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public record CadastrarPacienteDto(
@@ -19,7 +20,7 @@ public record CadastrarPacienteDto(
         String historicoMedico,
         String alergias,
         String medicamentos,
-        List<Consulta>consulta,
-        List<Financeiro>financeiro) {
+        List<Consulta>consulta ,
+        List<Financeiro>financeiro ) {
 
 }
