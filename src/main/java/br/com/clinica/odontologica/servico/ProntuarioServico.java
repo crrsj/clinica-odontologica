@@ -48,8 +48,7 @@ public class ProntuarioServico {
 
     }
 
-    public void excluirProntuario(Long id){
-        buscarPorId(id);
+    public void excluirProntuario(Long id){        
         prontuarioRepositorio.deleteById(id);
     }
 }
