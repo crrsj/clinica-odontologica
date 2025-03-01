@@ -26,6 +26,7 @@ public class TratamentoDeErros {
         return new ResponseEntity<>(msg,HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?>validarCampos(MethodArgumentNotValidException ex){
         var erros = ex.getFieldErrors();
         return ResponseEntity.badRequest().
