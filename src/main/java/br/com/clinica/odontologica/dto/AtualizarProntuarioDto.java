@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 public record AtualizarProntuarioDto(
         Long id,
+        JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
         LocalDate data,
         @NotBlank(message = "não pode estar em branco")
         String descricao,
