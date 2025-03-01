@@ -33,7 +33,7 @@ public class PacienteControle {
     @ApiResponse(responseCode = "201",description = " sucesso",content = {
             @Content(mediaType = "application.json",schema = @Schema(implementation = ResponseEntity.class))
     })
-    public ResponseEntity<CadastrarPacienteDto>cadastrarPaciente(@RequestBody CadastrarPacienteDto dto){
+    public ResponseEntity<CadastrarPacienteDto>cadastrarPaciente(@RequestBody @Valid CadastrarPacienteDto dto){
         var cadastrar = pacienteServico.cadastrarPaciente(dto);
         BeanUtils.copyProperties(dto,cadastrar);
         var uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -80,7 +80,7 @@ public class PacienteControle {
     @ApiResponse(responseCode = "200",description = " sucesso",content = {
             @Content(mediaType = "application.json",schema = @Schema(implementation = ResponseEntity.class))
     })
-    public ResponseEntity<AtualizarPacienteDto> atualizarPaciente(@RequestBody AtualizarPacienteDto atualizarPacienteDto){
+    public ResponseEntity<AtualizarPacienteDto> atualizarPaciente(@RequestBody @Valid AtualizarPacienteDto atualizarPacienteDto){
 
         var atualizar = pacienteServico.AtualizarPaciente(atualizarPacienteDto);
         BeanUtils.copyProperties(atualizarPacienteDto,atualizar);
