@@ -41,10 +41,9 @@ public class DentistaServico {
         buscarPorId(id);
         dentistaRepositorio.deleteById(id);
    }
-   public Dentista atualizarDentista(AtualizarDentistaDto atualizarDentistaDto, Long id){
+   public Dentista atualizarDentista(AtualizarDentistaDto atualizarDentistaDto){
     var atualizar = new Dentista();
      BeanUtils.copyProperties(atualizar,atualizarDentistaDto);
-     buscarPorId(id);
      return dentistaRepositorio.save(atualizar);
    }
 }

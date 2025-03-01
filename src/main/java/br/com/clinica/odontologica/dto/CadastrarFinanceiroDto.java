@@ -1,43 +1,28 @@
-package br.com.clinica.odontologica.entidade;
+package br.com.clinica.odontologica.dto;
 
-
+import br.com.clinica.odontologica.entidade.Paciente;
 import br.com.clinica.odontologica.enums.FormaPagamento;
 import br.com.clinica.odontologica.enums.StatusPagamento;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "tb_financeiros")
-public class Financeiro {
+public class CadastrarFinanceiroDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
     private LocalDate data;
-    @Column(columnDefinition = "TEXT")
     private String descricao;
     private double valor;
-    @Enumerated(EnumType.STRING)
     private FormaPagamento formaPagamento;
-    @Enumerated(EnumType.STRING)
     private StatusPagamento status;
-    @ManyToOne
     private Paciente paciente;
 
-    public Financeiro() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public CadastrarFinanceiroDto() {
     }
 
     public LocalDate getData() {

@@ -50,9 +50,8 @@ public class ConsultaServico {
         return consultaRepositorio.findByStatus(StatusConsulta.CANCELADA);
     }
 
-    public Consulta atualizarConsulta(AtualizarConsultaDto atualizarConsultaDto, Long id){
+    public Consulta atualizarConsulta(AtualizarConsultaDto atualizarConsultaDto){
         var atualizar = new Consulta();
-        buscarPorId(id);
         BeanUtils.copyProperties(atualizarConsultaDto,atualizar);
         return consultaRepositorio.save(atualizar);
 

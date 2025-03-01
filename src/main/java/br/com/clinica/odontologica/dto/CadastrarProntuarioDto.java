@@ -1,29 +1,23 @@
-package br.com.clinica.odontologica.entidade;
+package br.com.clinica.odontologica.dto;
 
-
+import br.com.clinica.odontologica.entidade.Paciente;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
-import java.time.LocalDate;
 
-@Entity
-@Table(name = "tb_prontuarios")
-public class Prontuario {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+public class CadastrarProntuarioDto {
+
     private Long id;
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
-    private LocalDate data;
+    private String data;
     private String descricao;
     private String receita;
     private String atestado;
-    @ManyToOne
-    @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 
-    public Prontuario() {
+    public CadastrarProntuarioDto() {
     }
 
     public Long getId() {
@@ -34,11 +28,11 @@ public class Prontuario {
         this.id = id;
     }
 
-    public LocalDate getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(LocalDate data) {
+    public void setData(String data) {
         this.data = data;
     }
 

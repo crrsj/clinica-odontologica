@@ -44,9 +44,8 @@ public class PacienteServico {
         return buscar.orElseThrow();
     }
 
-    public Paciente AtualizarPaciente(AtualizarPacienteDto atualizarPacienteDto,Long id){
+    public Paciente AtualizarPaciente(AtualizarPacienteDto atualizarPacienteDto){
         var atualizar  = new Paciente();
-        buscarPorId(id);
         BeanUtils.copyProperties(atualizarPacienteDto,atualizar);
         return pacienteRepositorio.save(atualizar);
     }

@@ -16,11 +16,11 @@ public class Paciente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
+    @Column(nullable = false,unique = true)
     private String cpf;
     private LocalDate dataNascimento;
     private String telefone;
     private String email;
-    private String endereco;
     @Column(columnDefinition = "TEXT")
     private String historicoMedico;
     private String alergias;
@@ -29,6 +29,8 @@ public class Paciente {
     private List<Consulta>consulta;
     @OneToMany(mappedBy = "paciente")
     private List<Financeiro>financeiro;
+    @OneToMany(mappedBy = "paciente")
+    private List<Prontuario>prontuario;
 
     public Paciente() {
     }
@@ -83,13 +85,6 @@ public class Paciente {
         this.email = email;
     }
 
-    public String getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
-    }
 
     public String getHistoricoMedico() {
         return historicoMedico;
@@ -129,5 +124,13 @@ public class Paciente {
 
     public void setFinanceiro(List<Financeiro> financeiro) {
         this.financeiro = financeiro;
+    }
+
+    public List<Prontuario> getProntuario() {
+        return prontuario;
+    }
+
+    public void setProntuario(List<Prontuario> prontuario) {
+        this.prontuario = prontuario;
     }
 }
