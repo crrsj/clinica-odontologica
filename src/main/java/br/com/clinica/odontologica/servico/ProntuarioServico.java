@@ -42,7 +42,6 @@ public class ProntuarioServico {
 
     public Prontuario atualizarProntuario(AtualizarProntuarioDto atualizarProntuarioDto){
         var atualizar = new Prontuario();
-
         BeanUtils.copyProperties(atualizarProntuarioDto,atualizar);
         return prontuarioRepositorio.save(atualizar);
 
