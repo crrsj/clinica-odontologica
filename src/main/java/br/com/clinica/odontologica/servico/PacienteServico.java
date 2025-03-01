@@ -49,8 +49,7 @@ public class PacienteServico {
         BeanUtils.copyProperties(atualizarPacienteDto,atualizar);
         return pacienteRepositorio.save(atualizar);
     }
-    public void excluirPaciente(Long id){
-        buscarPorId(id);
+    public void excluirPaciente(Long id){        
         pacienteRepositorio.findById(id);
     }
 }
