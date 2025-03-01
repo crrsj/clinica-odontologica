@@ -9,9 +9,10 @@ import java.time.LocalDate;
 
 public record AtualizarFinanceiroDto(
         Long id,
+        JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
         LocalDate data,
         String descricao,
         double valor,
         FormaPagamento formaPagamento,
-         StatusPagamento status, Paciente paciente) {
+        StatusPagamento status, Paciente paciente) {
 }
