@@ -14,8 +14,7 @@ public class CadastrarConsultaDto {
 
 
     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
-    private LocalDate dataConsulta;
-    @NotBlank(message = "não pode estar em branco")
+    private LocalDate dataConsulta;    
     private LocalTime horaConsulta;
     @NotBlank(message = "não pode estar em branco")
     private String procedimento;
