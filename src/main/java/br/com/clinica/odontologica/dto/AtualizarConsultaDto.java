@@ -8,8 +8,8 @@ import java.time.LocalTime;
 
 public record AtualizarConsultaDto(
         Long id,
-        LocalDate dataConsulta,
-        @NotBlank(message = "não pode estar em branco")
+        JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
+        LocalDate dataConsulta,      
         LocalTime horaConsulta,
         @NotBlank(message = "não pode estar em branco")
         String procedimento,
