@@ -37,8 +37,7 @@ public class DentistaServico {
         return dentistaRepositorio.findByNome(nome.trim().toUpperCase());
     }
 
-   public void excluirDentista(Long id){
-        buscarPorId(id);
+   public void excluirDentista(Long id){        
         dentistaRepositorio.deleteById(id);
    }
    public Dentista atualizarDentista(AtualizarDentistaDto atualizarDentistaDto){
