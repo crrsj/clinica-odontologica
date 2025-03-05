@@ -1,26 +1,38 @@
 package br.com.clinica.odontologica.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.NotBlank;
-
 import java.time.LocalDate;
+import java.util.List;
 
-public record AtualizarPacienteDto(
-        Long id,
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import br.com.clinica.odontologica.entidade.Consulta;
+import br.com.clinica.odontologica.entidade.Financeiro;
+import br.com.clinica.odontologica.entidade.Prontuario;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+public class AtualizarPacienteDto{
+        private Long id;
         @NotBlank(message = "não pode estar em branco")
-        String nome,
+        private String nome;
         @NotBlank(message = "não pode estar em branco")
-        String cpf,
+        private String cpf;
         @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
-        LocalDate dataNascimento,
+        private LocalDate dataNascimento;
         @NotBlank(message = "não pode estar em branco")
-        String telefone,
+        private String telefone;
         @NotBlank(message = "não pode estar em branco")
-        String email,
+        private String email;
         @NotBlank(message = "não pode estar em branco")
-        String historicoMedico,
+        String historicoMedico;
         @NotBlank(message = "não pode estar em branco")
-        String alergias,
+        private String alergias;
         @NotBlank(message = "não pode estar em branco")
-        String medicamentos) {
+        private String medicamentos;
+        private List<Consulta>consulta;       
+        private List<Financeiro>financeiro;       
+        private List<Prontuario>prontuario;
 }

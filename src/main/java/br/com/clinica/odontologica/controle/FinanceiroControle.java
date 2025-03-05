@@ -1,31 +1,40 @@
 package br.com.clinica.odontologica.controle;
 
 
+import java.util.List;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import br.com.clinica.odontologica.dto.AtualizarFinanceiroDto;
 import br.com.clinica.odontologica.dto.BuscarFinanceiroDto;
 import br.com.clinica.odontologica.dto.CadastrarFinanceiroDto;
-import br.com.clinica.odontologica.dto.CadastrarPacienteDto;
 import br.com.clinica.odontologica.servico.FinanceiroServico;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/financeiro")
+@RequiredArgsConstructor
 public class FinanceiroControle {
 
 
-    @Autowired
-    private FinanceiroServico financeiroServico;
+	private final ModelMapper modelMapper;
+    
+    private final FinanceiroServico financeiroServico;
 
 
     @PostMapping("/{pacienteId}")
@@ -37,9 +46,8 @@ public class FinanceiroControle {
                                                                      @PathVariable Long pacienteId){
         var cadastrar = financeiroServico.cadastrarFinanceiro(cadastrarFinanceiroDto,pacienteId);
         var uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").
-                buildAndExpand(cadastrar.getId()).toUri();
-        BeanUtils.copyProperties(cadastrarFinanceiroDto,cadastrar);
-        return ResponseEntity.created(uri).body(cadastrarFinanceiroDto);
+                buildAndExpand(cadastrar.getId()).toUri();       
+        return ResponseEntity.created(uri).body(modelMapper.map(cadastrar, CadastrarFinanceiroDto.class));
     }
 
     @GetMapping
@@ -59,19 +67,20 @@ public class FinanceiroControle {
     })
     public ResponseEntity<BuscarFinanceiroDto>buscarPorId(@PathVariable Long id){
         var buscar = financeiroServico.buscarPorId(id);
-        return ResponseEntity.ok().body(new BuscarFinanceiroDto(buscar));
+        
+        return ResponseEntity.ok().body(modelMapper.map(buscar, BuscarFinanceiroDto.class));
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @Operation(summary = "Endpoint responsável por atualizar financeiro.")
     @ApiResponse(responseCode = "200",description = " sucesso",content = {
             @Content(mediaType = "application.json",schema = @Schema(implementation = ResponseEntity.class))
     })
-    public ResponseEntity<AtualizarFinanceiroDto>atualizarFinanceiro(@RequestBody AtualizarFinanceiroDto atualizarFinanceiroDto ){
+    public ResponseEntity<AtualizarFinanceiroDto>atualizarFinanceiro(@RequestBody AtualizarFinanceiroDto atualizarFinanceiroDto,
+    		                                                         @PathVariable Long id){
 
-        var atualizar = financeiroServico.atualizarFinanceiro(atualizarFinanceiroDto);
-        BeanUtils.copyProperties(atualizarFinanceiroDto,atualizar);
-        return ResponseEntity.ok().body(atualizarFinanceiroDto);
+        var atualizar = financeiroServico.atualizarFinanceiro(atualizarFinanceiroDto,id);        
+        return ResponseEntity.ok().body(modelMapper.map(atualizar, AtualizarFinanceiroDto.class));
     }
 
 

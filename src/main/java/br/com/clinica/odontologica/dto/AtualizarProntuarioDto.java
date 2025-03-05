@@ -5,8 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public record AtualizarProntuarioDto(
         Long id,
+        @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
         LocalDate data,
         @NotBlank(message = "não pode estar em branco")
         String descricao,

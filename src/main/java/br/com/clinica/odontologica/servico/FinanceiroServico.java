@@ -7,34 +7,41 @@ import br.com.clinica.odontologica.dto.CadastrarFinanceiroDto;
 import br.com.clinica.odontologica.entidade.Financeiro;
 import br.com.clinica.odontologica.repositorio.FinanceiroRepositorio;
 import br.com.clinica.odontologica.repositorio.PacienteRepositorio;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
+
+import org.modelmapper.ModelMapper;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class FinanceiroServico {
 
 
-    @Autowired
-    private FinanceiroRepositorio financeiroRepositorio;
-    @Autowired
-    private PacienteRepositorio pacienteRepositorio;
+    
+    private final FinanceiroRepositorio financeiroRepositorio;
+    
+    private final PacienteRepositorio pacienteRepositorio;
+    
+    private final ModelMapper modelMapper;
 
-    public Financeiro cadastrarFinanceiro(CadastrarFinanceiroDto cadastrarFinanceiroDto,Long pacienteId){
-      var financeiro = new Financeiro();
+    public Financeiro cadastrarFinanceiro(CadastrarFinanceiroDto cadastrarFinanceiroDto,Long pacienteId){     
       var paciente = pacienteRepositorio.findById(pacienteId).orElseThrow();
-      financeiro.setPaciente(paciente);
-       BeanUtils.copyProperties(cadastrarFinanceiroDto,financeiro);
+      var financeiro = modelMapper.map(cadastrarFinanceiroDto, Financeiro.class);
+      financeiro.setPaciente(paciente);   
       return financeiroRepositorio.save(financeiro);
 
     }
 
     public List<BuscarFinanceiroDto> buscarFinanceiros(){
-        return financeiroRepositorio.findAll().stream().map(BuscarFinanceiroDto::new).toList();
+        return financeiroRepositorio.findAll().stream()
+        		.map(listar -> modelMapper
+        		.map(listar, BuscarFinanceiroDto.class))
+        		.collect(Collectors.toList());
     }
 
     public Financeiro buscarPorId(Long id){
@@ -42,9 +49,10 @@ public class FinanceiroServico {
         return buscar.orElseThrow();
     }
 
-    public Financeiro atualizarFinanceiro(AtualizarFinanceiroDto atualizarFinanceiroDto){
-        var atualizar = new Financeiro();
-        BeanUtils.copyProperties(atualizarFinanceiroDto,atualizar);
+    
+    public Financeiro atualizarFinanceiro(AtualizarFinanceiroDto atualizarFinanceiroDto,Long id){      
+        var atualizar = modelMapper.map(atualizarFinanceiroDto, Financeiro.class);
+        atualizar.setId(id);
         return financeiroRepositorio.save(atualizar);
     }
 

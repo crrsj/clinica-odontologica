@@ -1,31 +1,41 @@
 package br.com.clinica.odontologica.controle;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import br.com.clinica.odontologica.dto.AtualizarPacienteDto;
 import br.com.clinica.odontologica.dto.BuscarPacientesDto;
 import br.com.clinica.odontologica.dto.CadastrarPacienteDto;
-import br.com.clinica.odontologica.entidade.Paciente;
 import br.com.clinica.odontologica.servico.PacienteServico;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/paciente")
+@RequiredArgsConstructor
 public class PacienteControle {
 
-    @Autowired
-    private  PacienteServico pacienteServico;
+    
+    private final PacienteServico pacienteServico;
+    
+    private final ModelMapper modelMapper;
 
 
     @PostMapping
@@ -33,12 +43,11 @@ public class PacienteControle {
     @ApiResponse(responseCode = "201",description = " sucesso",content = {
             @Content(mediaType = "application.json",schema = @Schema(implementation = ResponseEntity.class))
     })
-    public ResponseEntity<CadastrarPacienteDto>cadastrarPaciente(@RequestBody CadastrarPacienteDto dto){
-        var cadastrar = pacienteServico.cadastrarPaciente(dto);
-        BeanUtils.copyProperties(dto,cadastrar);
+    public ResponseEntity<CadastrarPacienteDto>cadastrarPaciente(@RequestBody @Valid CadastrarPacienteDto dto){
+        var cadastrar = pacienteServico.cadastrarPaciente(dto);      
         var uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(cadastrar.getId()).toUri();
-        return ResponseEntity.created(uri).body(dto);
+                .buildAndExpand(cadastrar.getId()).toUri();  
+        return ResponseEntity.created(uri).body(modelMapper.map(cadastrar, CadastrarPacienteDto.class));
        
     }
 
@@ -51,6 +60,16 @@ public class PacienteControle {
         var listar = pacienteServico.listarPacientes();
         return ResponseEntity.ok().body(listar);
     }
+    
+    @GetMapping("/{id}")
+    @Operation(summary = "Endpoint responsável por buscar paciente pelo id .")
+    @ApiResponse(responseCode = "200",description = " sucesso",content = {
+            @Content(mediaType = "application.json",schema = @Schema(implementation = ResponseEntity.class))
+    })
+    public ResponseEntity<BuscarPacientesDto>buscarPorId(@PathVariable Long id) {
+    	var buscar = pacienteServico.buscarPorId(id);    	
+    	return ResponseEntity.ok().body(modelMapper.map(buscar, BuscarPacientesDto.class));
+    }
 
 
     @GetMapping("/nomePaciente")
@@ -60,7 +79,8 @@ public class PacienteControle {
     })
     public ResponseEntity<List<BuscarPacientesDto>>buscarPorNome(@PathParam("nome")String nome){
         var buscarNome = pacienteServico.buscarPorNome(nome);
-        return ResponseEntity.ok().body(buscarNome.stream().map(BuscarPacientesDto::new).toList());
+        return ResponseEntity.ok().body(buscarNome.stream().map(buscarPaciente -> modelMapper.map(buscarNome, BuscarPacientesDto.class)).
+        		collect(Collectors.toList()));
     }
 
 
@@ -75,16 +95,16 @@ public class PacienteControle {
     }
 
 
-    @PutMapping
-    @Operation(summary = "Endpoint responsável por atualizar o paciente .")
+    @PutMapping("/{id}")
+    @Operation(summary = "Endpoint responsável por atualizar o paciente pelo id .")
     @ApiResponse(responseCode = "200",description = " sucesso",content = {
             @Content(mediaType = "application.json",schema = @Schema(implementation = ResponseEntity.class))
     })
-    public ResponseEntity<AtualizarPacienteDto> atualizarPaciente(@RequestBody AtualizarPacienteDto atualizarPacienteDto){
+    public ResponseEntity<AtualizarPacienteDto> atualizarPaciente(@RequestBody @Valid AtualizarPacienteDto atualizarPacienteDto,
+    		                                                       @PathVariable("id") Long id){
 
-        var atualizar = pacienteServico.AtualizarPaciente(atualizarPacienteDto);
-        BeanUtils.copyProperties(atualizarPacienteDto,atualizar);
-        return ResponseEntity.ok().body(atualizarPacienteDto);
+        var atualizar = pacienteServico.AtualizarPaciente(atualizarPacienteDto,id);     
+        return ResponseEntity.ok().body( modelMapper.map(atualizar, AtualizarPacienteDto.class));
     }
 
     @DeleteMapping("/{id}")

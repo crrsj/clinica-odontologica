@@ -1,6 +1,20 @@
 package br.com.clinica.odontologica.controle;
 
 
+import java.util.List;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import br.com.clinica.odontologica.dto.AtualizarDentistaDto;
 import br.com.clinica.odontologica.dto.BuscarDentistasDto;
 import br.com.clinica.odontologica.dto.CadastrarDentistaDto;
@@ -10,20 +24,15 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/dentista")
+@RequiredArgsConstructor
 public class DentistaControle {
 
-    @Autowired
-    private DentistaServico dentistaServico;
+    private final ModelMapper modelMapper;
+    private final DentistaServico dentistaServico;
 
 
     @PostMapping
@@ -35,8 +44,8 @@ public class DentistaControle {
         var cadastrar = dentistaServico.cadastrarDentista(cadastrarDentistaDto);
         var uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").
                 buildAndExpand(cadastrar.getId()).toUri();
-        BeanUtils.copyProperties(cadastrarDentistaDto,cadastrar);
-        return ResponseEntity.created(uri).body(cadastrarDentistaDto);
+        
+        return ResponseEntity.created(uri).body(modelMapper.map(cadastrar, CadastrarDentistaDto.class));
 
     }
 
@@ -56,21 +65,20 @@ public class DentistaControle {
             @Content(mediaType = "application.json",schema = @Schema(implementation = ResponseEntity.class))
     })
     public ResponseEntity<BuscarDentistasDto>buscarPorId(@PathVariable Long id){
-        var buscar = dentistaServico.buscarPorId(id);
-        return ResponseEntity.ok().body(new BuscarDentistasDto(buscar));
+        var buscar = dentistaServico.buscarPorId(id);    
+        return ResponseEntity.ok().body(modelMapper.map(buscar, BuscarDentistasDto.class));
     }
 
 
     @PutMapping("/{id}")
-    @Operation(summary = "Endpoint responsibile por atualizar dentista.")
+    @Operation(summary = "Endpoint responsibile por atualizar o dentista pelo id.")
     @ApiResponse(responseCode = "200",description = " sucesso",content = {
             @Content(mediaType = "application.json",schema = @Schema(implementation = ResponseEntity.class))
     })
-    public ResponseEntity<AtualizarDentistaDto>atualizarDentista(@RequestBody @Valid AtualizarDentistaDto atualizarDentistaDto ){
-
-        var atualizar = dentistaServico.atualizarDentista(atualizarDentistaDto);
-        BeanUtils.copyProperties(atualizarDentistaDto,atualizar);
-        return ResponseEntity.ok(atualizarDentistaDto);
+    public ResponseEntity<AtualizarDentistaDto>atualizarDentista(@RequestBody @Valid AtualizarDentistaDto atualizarDentistaDto,
+    		                                                      @PathVariable Long id){
+        var atualizar = dentistaServico.atualizarDentista(atualizarDentistaDto,id);       
+        return ResponseEntity.ok(modelMapper.map(atualizar, AtualizarDentistaDto.class));
     }
 
     @DeleteMapping("/{id}")

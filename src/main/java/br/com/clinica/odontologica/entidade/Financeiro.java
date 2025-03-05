@@ -12,6 +12,8 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "tb_financeiros")
+@Data
+@NoArgsConstructor
 public class Financeiro {
 
     @Id
@@ -29,62 +31,5 @@ public class Financeiro {
     @ManyToOne
     private Paciente paciente;
 
-    public Financeiro() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDate getData() {
-        return data;
-    }
-
-    public void setData(LocalDate data) {
-        this.data = data;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public double getValor() {
-        return valor;
-    }
-
-    public void setValor(double valor) {
-        this.valor = valor;
-    }
-
-    public FormaPagamento getFormaPagamento() {
-        return formaPagamento;
-    }
-
-    public void setFormaPagamento(FormaPagamento formaPagamento) {
-        this.formaPagamento = formaPagamento;
-    }
-
-    public StatusPagamento getStatus() {
-        return status;
-    }
-
-    public void setStatus(StatusPagamento status) {
-        this.status = status;
-    }
-
-    public Paciente getPaciente() {
-        return paciente;
-    }
-
-    public void setPaciente(Paciente paciente) {
-        this.paciente = paciente;
-    }
+  
 }

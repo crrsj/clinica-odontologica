@@ -2,20 +2,25 @@ package br.com.clinica.odontologica.dto;
 
 import br.com.clinica.odontologica.entidade.Consulta;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-public record AtualizarDentistaDto(
-        Long id,
+
+@Data
+@NoArgsConstructor
+public class AtualizarDentistaDto{
+        private  Long id;
         @NotBlank(message = "não pode estar em branco")
-        String nome,
+        private String nome;
         @NotBlank(message = "não pode estar em branco")
-        String cro,
+        private String cro;
         @NotBlank(message = "não pode estar em branco")
-        String especialidade,
+        private String especialidade;
         @NotBlank(message = "não pode estar em branco")
-        String telefone,
+        private String telefone;
         @NotBlank(message = "não pode estar em branco")
-        String email,
-        List<Consulta> consulta) {
+        private String email;
+        private List<Consulta> consulta;
 }

@@ -1,32 +1,45 @@
 package br.com.clinica.odontologica.servico;
 
-import br.com.clinica.odontologica.dto.AtualizarDentistaDto;
-import br.com.clinica.odontologica.dto.BuscarDentistasDto;
-import br.com.clinica.odontologica.dto.CadastrarDentistaDto;
-import br.com.clinica.odontologica.entidade.Dentista;
-import br.com.clinica.odontologica.repositorio.DentistaRepositorio;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+
+
+
+
+
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+import br.com.clinica.odontologica.dto.AtualizarDentistaDto;
+import br.com.clinica.odontologica.dto.BuscarDentistasDto;
+import br.com.clinica.odontologica.dto.CadastrarDentistaDto;
+
+import br.com.clinica.odontologica.entidade.Dentista;
+import br.com.clinica.odontologica.repositorio.DentistaRepositorio;
+import lombok.RequiredArgsConstructor;
+
 
 @Service
+@RequiredArgsConstructor
 public class DentistaServico {
 
-    @Autowired
-    private DentistaRepositorio dentistaRepositorio;
+	private final ModelMapper modelMapper;
+    
+    private final DentistaRepositorio dentistaRepositorio;
 
     public Dentista cadastrarDentista(CadastrarDentistaDto cadastrarDentistaDto){
-        var cadastrar = new Dentista();
-        BeanUtils.copyProperties(cadastrarDentistaDto,cadastrar);
+        var cadastrar = modelMapper.map(cadastrarDentistaDto, Dentista.class);        
         return dentistaRepositorio.save(cadastrar);
     }
 
     public List<BuscarDentistasDto>buscarDentistas(){
-        return dentistaRepositorio.findAll().
-                stream().map(BuscarDentistasDto::new).toList();
+        return dentistaRepositorio.findAll()
+                .stream().map(buscarDentistas -> modelMapper
+                .map(buscarDentistas, BuscarDentistasDto.class))
+                .collect(Collectors.toList());
 
     }
     public Dentista buscarPorId(Long id){
@@ -41,9 +54,9 @@ public class DentistaServico {
         buscarPorId(id);
         dentistaRepositorio.deleteById(id);
    }
-   public Dentista atualizarDentista(AtualizarDentistaDto atualizarDentistaDto){
-    var atualizar = new Dentista();
-     BeanUtils.copyProperties(atualizar,atualizarDentistaDto);
+   public Dentista atualizarDentista(AtualizarDentistaDto atualizarDentistaDto,Long id){
+  var atualizar = modelMapper.map(atualizarDentistaDto, Dentista.class);
+  atualizar.setId(id);
      return dentistaRepositorio.save(atualizar);
    }
 }

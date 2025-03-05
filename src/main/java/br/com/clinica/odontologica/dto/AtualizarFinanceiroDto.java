@@ -3,15 +3,24 @@ package br.com.clinica.odontologica.dto;
 import br.com.clinica.odontologica.entidade.Paciente;
 import br.com.clinica.odontologica.enums.FormaPagamento;
 import br.com.clinica.odontologica.enums.StatusPagamento;
-import jakarta.validation.constraints.NotBlank;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-public record AtualizarFinanceiroDto(
-        Long id,
-        LocalDate data,
-        String descricao,
-        double valor,
-        FormaPagamento formaPagamento,
-         StatusPagamento status, Paciente paciente) {
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@Data
+@NoArgsConstructor
+public class AtualizarFinanceiroDto{
+		
+        private Long id;
+        @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
+        private LocalDate data;        
+        private String descricao;
+        private double valor;
+        private FormaPagamento formaPagamento;
+        private StatusPagamento status;
+        private Paciente paciente;
 }

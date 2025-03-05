@@ -1,5 +1,12 @@
 package br.com.clinica.odontologica.servico;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.modelmapper.ModelMapper;
+
+import org.springframework.stereotype.Service;
+
 import br.com.clinica.odontologica.dto.AtualizarConsultaDto;
 import br.com.clinica.odontologica.dto.BuscarConsultasDto;
 import br.com.clinica.odontologica.dto.CadastrarConsultaDto;
@@ -7,34 +14,32 @@ import br.com.clinica.odontologica.entidade.Consulta;
 import br.com.clinica.odontologica.enums.StatusConsulta;
 import br.com.clinica.odontologica.repositorio.ConsultaRepositorio;
 import br.com.clinica.odontologica.repositorio.PacienteRepositorio;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ConsultaServico {
+	
+	
+   private final ModelMapper modelMapper;
 
-    @Autowired
-    private ConsultaRepositorio consultaRepositorio;
+    
+    private final  ConsultaRepositorio consultaRepositorio;
 
-    @Autowired
-    private PacienteRepositorio pacienteRepositorio;
+    
+    private final PacienteRepositorio pacienteRepositorio;
 
-    public Consulta cadastrarConsulta(CadastrarConsultaDto cadastrarConsultaDto,Long pacienteId){
-        var consulta = new Consulta();
+    public Consulta cadastrarConsulta(CadastrarConsultaDto cadastrarConsultaDto,Long pacienteId){    	
         var paciente = pacienteRepositorio.findById(pacienteId).orElseThrow();
-        consulta.setPaciente(paciente);
-        BeanUtils.copyProperties(cadastrarConsultaDto,consulta);
+        var consulta = modelMapper.map(cadastrarConsultaDto, Consulta.class);
+        consulta.setPaciente(paciente);       
         return consultaRepositorio.save(consulta);
 
     }
 
     public List<BuscarConsultasDto>buscarConsultas(){
       return consultaRepositorio.findAll().
-              stream().map(BuscarConsultasDto::new).toList();
+              stream().map(buscaracaonsultas -> modelMapper.map(buscaracaonsultas, BuscarConsultasDto.class)).toList();
     }
 
     public Consulta buscarPorId(Long id){
@@ -50,9 +55,9 @@ public class ConsultaServico {
         return consultaRepositorio.findByStatus(StatusConsulta.CANCELADA);
     }
 
-    public Consulta atualizarConsulta(AtualizarConsultaDto atualizarConsultaDto){
-        var atualizar = new Consulta();
-        BeanUtils.copyProperties(atualizarConsultaDto,atualizar);
+    public Consulta atualizarConsulta(AtualizarConsultaDto atualizarConsultaDto,Long id){
+     var  atualizar = modelMapper.map(atualizarConsultaDto, Consulta.class);
+     buscarPorId(id);
         return consultaRepositorio.save(atualizar);
 
     }

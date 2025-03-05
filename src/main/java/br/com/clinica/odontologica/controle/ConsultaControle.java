@@ -1,29 +1,39 @@
 package br.com.clinica.odontologica.controle;
 
+import java.util.List;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import br.com.clinica.odontologica.dto.AtualizarConsultaDto;
 import br.com.clinica.odontologica.dto.BuscarConsultasDto;
 import br.com.clinica.odontologica.dto.CadastrarConsultaDto;
-import br.com.clinica.odontologica.entidade.Consulta;
 import br.com.clinica.odontologica.servico.ConsultaServico;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/consulta")
+@RequiredArgsConstructor
 public class ConsultaControle {
 
-    @Autowired
-    public ConsultaServico consultaServico;
+    
+    public final ConsultaServico consultaServico;
+    
+    private final ModelMapper modelMapper;
 
 
     @PostMapping("{pacienteId}")
@@ -35,9 +45,8 @@ public class ConsultaControle {
                                                                  @PathVariable Long pacienteId){
         var cadastrar = consultaServico.cadastrarConsulta(cadastrarConsultaDto,pacienteId);
         var uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(cadastrar.getId()).toUri();
-        BeanUtils.copyProperties(cadastrarConsultaDto,cadastrar);
-        return ResponseEntity.created(uri).body(cadastrarConsultaDto);
+                .buildAndExpand(cadastrar.getId()).toUri();   
+        return ResponseEntity.created(uri).body(modelMapper.map(cadastrar, CadastrarConsultaDto.class));
 
     }
 
@@ -71,26 +80,25 @@ public class ConsultaControle {
         return ResponseEntity.ok().body(buscar);
     }
 
-    @PutMapping
-    @Operation(summary = "Endpoint resposável por atualizar consultas.")
+    @PutMapping("/{id}")
+    @Operation(summary = "Endpoint resposável por atualizar a consulta pelo id.")
     @ApiResponse(responseCode = "200",description = " sucesso",content = {
             @Content(mediaType = "application.json",schema = @Schema(implementation = ResponseEntity.class))
     })
-    public ResponseEntity<AtualizarConsultaDto>atualizarConsulta(@RequestBody @Valid AtualizarConsultaDto atualizarConsultaDto){
-
-        var atualizar = consultaServico.atualizarConsulta(atualizarConsultaDto);
-        BeanUtils.copyProperties(atualizarConsultaDto,atualizar);
-        return ResponseEntity.ok().body(atualizarConsultaDto);
+    public ResponseEntity<AtualizarConsultaDto>atualizarConsulta(@RequestBody @Valid AtualizarConsultaDto atualizarConsultaDto,
+    		                                                      @PathVariable Long id){
+        var atualizar = consultaServico.atualizarConsulta(atualizarConsultaDto,id);        
+        return ResponseEntity.ok().body(modelMapper.map(atualizar, AtualizarConsultaDto.class));
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "Endpoint responsável por buscar consulta pelo id.")
     @ApiResponse(responseCode = "200",description = " sucesso",content = {
             @Content(mediaType = "application.json",schema = @Schema(implementation = ResponseEntity.class))
     })
     public ResponseEntity<BuscarConsultasDto> buscarPorId(@PathVariable Long id){
-        var buscar = consultaServico.buscarPorId(id);
-        return ResponseEntity.ok().body(new BuscarConsultasDto(buscar));
+        var buscar = consultaServico.buscarPorId(id);      
+        return ResponseEntity.ok().body( modelMapper.map(buscar, BuscarConsultasDto.class));
     }
 
     @DeleteMapping("/{id}")
