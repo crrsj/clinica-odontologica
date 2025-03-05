@@ -1,7 +1,6 @@
 package br.com.clinica.odontologica.servico;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -49,16 +48,14 @@ public class PacienteServico {
 
     public Paciente AtualizarPaciente(AtualizarPacienteDto atualizarPacienteDto,Long id){
      var atualizar = modelMapper.map(atualizarPacienteDto, Paciente.class);
-     atualizar.setId(id);
-        if (atualizar.getId()==null) {
-        	throw new NoSuchElementException();
-        }
+     atualizar.setId(id);     
+     return pacienteRepositorio.save(atualizar);
       
-       return pacienteRepositorio.save(atualizar);
     }
-    
-    public void excluirPaciente(Long id){
+
+    public void excluirPaciente(Long id){        
         buscarPorId(id);
         pacienteRepositorio.deleteById(id);
+
     }
 }

@@ -44,10 +44,11 @@ public class PacienteControle {
             @Content(mediaType = "application.json",schema = @Schema(implementation = ResponseEntity.class))
     })
     public ResponseEntity<CadastrarPacienteDto>cadastrarPaciente(@RequestBody @Valid CadastrarPacienteDto dto){
-        var cadastrar = pacienteServico.cadastrarPaciente(dto);      
+        var cadastrar = pacienteServico.cadastrarPaciente(dto); 
         var uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(cadastrar.getId()).toUri();  
         return ResponseEntity.created(uri).body(modelMapper.map(cadastrar, CadastrarPacienteDto.class));
+     
        
     }
 
@@ -100,9 +101,9 @@ public class PacienteControle {
     @ApiResponse(responseCode = "200",description = " sucesso",content = {
             @Content(mediaType = "application.json",schema = @Schema(implementation = ResponseEntity.class))
     })
-    public ResponseEntity<AtualizarPacienteDto> atualizarPaciente(@RequestBody @Valid AtualizarPacienteDto atualizarPacienteDto,
-    		                                                       @PathVariable("id") Long id){
 
+    public ResponseEntity<AtualizarPacienteDto> atualizarPaciente(@RequestBody @Valid AtualizarPacienteDto atualizarPacienteDto,
+    		                                                       @PathVariable("id") Long id){   
         var atualizar = pacienteServico.AtualizarPaciente(atualizarPacienteDto,id);     
         return ResponseEntity.ok().body( modelMapper.map(atualizar, AtualizarPacienteDto.class));
     }

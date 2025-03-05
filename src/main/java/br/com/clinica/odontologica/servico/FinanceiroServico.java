@@ -56,8 +56,7 @@ public class FinanceiroServico {
         return financeiroRepositorio.save(atualizar);
     }
 
-    public void excluirFinanceiro(Long id){
-        buscarPorId(id);
+    public void excluirFinanceiro(Long id){        
         financeiroRepositorio.deleteById(id);
     }
 }

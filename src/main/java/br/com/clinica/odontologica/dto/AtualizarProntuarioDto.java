@@ -2,20 +2,26 @@ package br.com.clinica.odontologica.dto;
 
 import br.com.clinica.odontologica.entidade.Paciente;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public record AtualizarProntuarioDto(
-        Long id,
+@Data
+@NoArgsConstructor
+public class AtualizarProntuarioDto{
+        private  Long id;    
         @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
-        LocalDate data,
+        private LocalDate data;
         @NotBlank(message = "não pode estar em branco")
-        String descricao,
+        private String descricao;
         @NotBlank(message = "não pode estar em branco")
-        String receita,
+        private String receita;
         @NotBlank(message = "não pode estar em branco")
-        String atestado,
-        Paciente paciente) {
+        private String atestado;
+        private Paciente paciente;
+        
+        
 }

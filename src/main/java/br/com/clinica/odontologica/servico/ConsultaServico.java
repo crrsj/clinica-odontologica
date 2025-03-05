@@ -62,8 +62,7 @@ public class ConsultaServico {
 
     }
 
-    public void excluirConsulta(Long id){
-        buscarPorId(id);
+    public void excluirConsulta(Long id){  
         consultaRepositorio.deleteById(id);
     }
 

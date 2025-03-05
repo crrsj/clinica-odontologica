@@ -11,6 +11,8 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+
+
 @Data
 @NoArgsConstructor
 public class AtualizarFinanceiroDto{
@@ -23,4 +25,5 @@ public class AtualizarFinanceiroDto{
         private FormaPagamento formaPagamento;
         private StatusPagamento status;
         private Paciente paciente;
+
 }

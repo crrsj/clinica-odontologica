@@ -45,15 +45,14 @@ public class ProntuarioServico {
         return buscar.orElseThrow();
     }
 
+
     public Prontuario atualizarProntuario(AtualizarProntuarioDto atualizarProntuarioDto,Long id){     
-       var atualizar = modelMapper.map(atualizarProntuarioDto, Prontuario.class);
-       atualizar.setId(id);
+        var atualizar = modelMapper.map(atualizarProntuarioDto, Prontuario.class);
         return prontuarioRepositorio.save(atualizar);
 
     }
 
-    public void excluirProntuario(Long id){
-        buscarPorId(id);
+    public void excluirProntuario(Long id){        
         prontuarioRepositorio.deleteById(id);
     }
 }
